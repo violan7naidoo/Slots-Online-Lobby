@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Game on Studios - Game Lobby',
-  description: 'Welcome to Game on Studios - Your gateway to exciting slot games',
+  title: 'Violan Naidoo Demo Games - Full-Stack Gaming Platform',
+  description: 'Enterprise-grade gaming platform showcasing microservices architecture, C# .NET backend, Next.js frontend, and scalable system design',
 };
 
 export default function RootLayout({
