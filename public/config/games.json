@@ -1,0 +1,50 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "name": "Frosty Fortunes",
+      "gameId": "FROSTY_FORTUNES",
+      "frontendUrl": "http://localhost:3001",
+      "thumbnail": "/images/games/frosty-fortunes.jpg",
+      "description": "6x4 slot game with exciting features and big wins",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "name": "Frosty Fortunes 5x3",
+      "gameId": "Example5x3",
+      "frontendUrl": "http://localhost:3002",
+      "thumbnail": "/images/games/example-5x3.jpg",
+      "description": "5x3 slot game with 10 symbols and fast-paced action",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "name": "Inferno Empress",
+      "gameId": "Inferno-Empress",
+      "frontendUrl": "http://localhost:3003",
+      "thumbnail": "/images/games/inferno-impress.jpg",
+      "description": "5x4 slot game with exciting features",
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "name": "Reign Of Thunder",
+      "gameId": "Reign-Of-Thunder",
+      "frontendUrl": "http://localhost:3004",
+      "thumbnail": "/images/games/Reign-Of-Thunder.jpg",
+      "description": "4x4 slot game with 10 symbols and 10 paylines",
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "name": "Coming Soon",
+      "gameId": null,
+      "frontendUrl": null,
+      "thumbnail": "",
+      "description": "New game coming soon",
+      "enabled": false
+    }
+  ]
+}
+
