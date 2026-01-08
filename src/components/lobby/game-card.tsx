@@ -26,7 +26,7 @@ export function GameCard({ game }: GameCardProps) {
         'transition-all duration-300',
         isEnabled
           ? 'hover:scale-105 hover:shadow-2xl'
-          : 'opacity-60 cursor-not-allowed'
+          : 'cursor-not-allowed'
       )}
       onClick={handleClick}
     >
@@ -46,7 +46,7 @@ export function GameCard({ game }: GameCardProps) {
           />
         ) : null}
         {/* Gradient background (shown when no image or image fails) */}
-        <div className={`absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/30 to-accent/20 flex items-center justify-center ${!isEnabled ? 'bg-black/60' : ''}`}>
+        <div className={`absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/30 to-accent/20 flex items-center justify-center ${!isEnabled ? 'bg-black/30' : ''}`}>
           {isEnabled ? (
             <div className="text-center">
               <Play className="w-16 h-16 text-primary-foreground/80 mx-auto mb-2" />

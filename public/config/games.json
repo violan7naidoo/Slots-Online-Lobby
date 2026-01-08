@@ -38,11 +38,29 @@
     },
     {
       "id": 5,
-      "name": "Coming Soon",
+      "name": "Frost Fortune",
       "gameId": null,
       "frontendUrl": null,
       "thumbnail": "",
-      "description": "New game coming soon",
+      "description": "Bingo class 2 demo Slot game",
+      "enabled": false
+    },
+    {
+      "id": 6,
+      "name": "Monkey Run",
+      "gameId": null,
+      "frontendUrl": null,
+      "thumbnail": "/images/games/crash-tile-game.jpg",
+      "description": "Crash Tile Game Concept",
+      "enabled": false
+    },
+    {
+      "id": 7,
+      "name": "African King Megaways",
+      "gameId": null,
+      "frontendUrl": null,
+      "thumbnail": "",
+      "description": "Dynamic number of symbols per reel for each spin",
       "enabled": false
     }
   ]

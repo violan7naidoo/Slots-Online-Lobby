@@ -25,11 +25,10 @@ export default function LobbyPage() {
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Backend Architecture</h3>
                 <ul className="space-y-2 text-muted-foreground text-sm">
-                  <li>• <strong className="text-foreground">Microservices:</strong> RGS, Backend API, RNG Service</li>
+                  <li>• <strong className="text-foreground">Microservices:</strong> RGS, Game Engine, RNG Service</li>
                   <li>• <strong className="text-foreground">C# / .NET 8.0:</strong> ASP.NET Core Minimal APIs</li>
                   <li>• <strong className="text-foreground">RESTful APIs:</strong> Stateless, scalable endpoints</li>
-                  <li>• <strong className="text-foreground">WebSockets / SignalR:</strong> Real-time communication</li>
-                  <li>• <strong className="text-foreground">SQLite / SQL Server:</strong> Data persistence</li>
+                  <li>• <strong className="text-foreground">SQLite:</strong> Data persistence</li>
                 </ul>
               </div>
               <div>
@@ -45,11 +44,14 @@ export default function LobbyPage() {
             </div>
             <div className="mt-6 pt-6 border-t border-border">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                This platform demonstrates enterprise-grade gaming system architecture with separation of concerns, 
-                dedicated RNG (Random Number Generator) service for compliance, and scalable microservices design. 
-                Each game frontend communicates with the RGS (Remote Gaming Server), which orchestrates game logic 
-                through the Backend API and ensures fair play via the dedicated RNG service. Built with production-ready 
-                practices including environment-based configuration, CORS management, and comprehensive error handling.
+                This platform demonstrates a microservices-based gaming architecture with clear separation of concerns 
+                across multiple independent services. The architecture follows industry-standard gaming system patterns: 
+                each game frontend (Next.js/React) communicates with the RGS (Remote Gaming Server) demo layer, which 
+                acts as an orchestration middleware. The RGS layer routes requests to the Game Engine, where core game 
+                logic and mechanics are processed. For regulatory compliance and fairness, all randomness is generated 
+                through a dedicated RNG (Random Number Generator) microservice, ensuring auditable and verifiable game 
+                outcomes. This microservices approach enables independent scaling, technology flexibility, and maintains 
+                clear boundaries between session management (RGS), game logic (Game Engine), and randomness generation (RNG).
               </p>
             </div>
           </div>
