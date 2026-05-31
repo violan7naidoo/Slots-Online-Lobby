@@ -1,10 +1,12 @@
 'use client';
 
 import { useGames } from '@/hooks/use-games';
+import { useServiceWakeup } from '@/hooks/use-service-wakeup';
 import { GameGrid } from '@/components/lobby/game-grid';
 
 export default function LobbyPage() {
   const { games, loading, error } = useGames();
+  const { status, isWaking } = useServiceWakeup();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
@@ -17,7 +19,7 @@ export default function LobbyPage() {
           <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
             Full-Stack Gaming Platform Showcase
           </p>
-          
+
           {/* Technical Overview */}
           <div className="max-w-4xl mx-auto mt-8 p-6 bg-card/50 border border-border rounded-lg backdrop-blur-sm">
             <h2 className="text-2xl font-bold text-foreground mb-4">Architecture & Technology Stack</h2>
@@ -37,25 +39,42 @@ export default function LobbyPage() {
                   <li>• <strong className="text-foreground">Next.js 15:</strong> React Server Components</li>
                   <li>• <strong className="text-foreground">TypeScript:</strong> Type-safe development</li>
                   <li>• <strong className="text-foreground">Docker:</strong> Containerized deployments</li>
-                  <li>• <strong className="text-foreground">Railway.app:</strong> Backend hosting</li>
+                  <li>• <strong className="text-foreground">Render:</strong> Backend hosting</li>
                   <li>• <strong className="text-foreground">Vercel:</strong> Frontend hosting & CDN</li>
                 </ul>
               </div>
             </div>
             <div className="mt-6 pt-6 border-t border-border">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                This platform demonstrates a microservices-based gaming architecture with clear separation of concerns 
-                across multiple independent services. The architecture follows industry-standard gaming system patterns: 
-                each game frontend (Next.js/React) communicates with the RGS (Remote Gaming Server) demo layer, which 
-                acts as an orchestration middleware. The RGS layer routes requests to the Game Engine, where core game 
-                logic and mechanics are processed. For regulatory compliance and fairness, all randomness is generated 
-                through a dedicated RNG (Random Number Generator) microservice, ensuring auditable and verifiable game 
-                outcomes. This microservices approach enables independent scaling, technology flexibility, and maintains 
+                This platform demonstrates a microservices-based gaming architecture with clear separation of concerns
+                across multiple independent services. The architecture follows industry-standard gaming system patterns:
+                each game frontend (Next.js/React) communicates with the RGS (Remote Gaming Server) demo layer, which
+                acts as an orchestration middleware. The RGS layer routes requests to the Game Engine, where core game
+                logic and mechanics are processed. For regulatory compliance and fairness, all randomness is generated
+                through a dedicated RNG (Random Number Generator) microservice, ensuring auditable and verifiable game
+                outcomes. This microservices approach enables independent scaling, technology flexibility, and maintains
                 clear boundaries between session management (RGS), game logic (Game Engine), and randomness generation (RNG).
               </p>
             </div>
           </div>
         </div>
+
+        {/* Service wakeup banner */}
+        {isWaking && (
+          <div className="flex items-center gap-3 bg-card/80 border border-border rounded-lg px-4 py-3 mb-6">
+            <div className="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
+              Warming up game services — first visit may take ~30 seconds...
+            </p>
+          </div>
+        )}
+        {status === 'timeout' && (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-3 mb-6">
+            <p className="text-sm text-amber-400">
+              Services are taking longer than expected. You can still launch a game — it may take a moment to respond on the first spin.
+            </p>
+          </div>
+        )}
 
         {/* Error State */}
         {error && (
@@ -70,4 +89,3 @@ export default function LobbyPage() {
     </main>
   );
 }
-
