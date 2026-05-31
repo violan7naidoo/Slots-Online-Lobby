@@ -11,8 +11,9 @@ interface GameLoadingModalProps {
 type Status = 'connecting' | 'ready' | 'timeout';
 
 const THUNDER_PHARAOH_ID = 8;
-const TP_WARMUP_MS = 35_000;
-const GLOBAL_TIMEOUT_MS = 60_000;
+const TP_WARMUP_MS       = 35_000;
+const RETRY_INTERVAL_MS  = 5_000;
+const MAX_RETRIES        = 12; // 12 × 5s = 60s before giving up
 
 export function GameLoadingModal({ game, onClose }: GameLoadingModalProps) {
   const [status, setStatus] = useState<Status>('connecting');
@@ -23,34 +24,47 @@ export function GameLoadingModal({ game, onClose }: GameLoadingModalProps) {
       ? process.env.NEXT_PUBLIC_TP_API_URL
       : process.env.NEXT_PUBLIC_RGS_URL;
 
-    // Local dev — ready immediately
     if (!serviceUrl || serviceUrl.includes('localhost')) {
       setStatus('ready');
       return;
     }
 
-    const controller = new AbortController();
+    let cancelled = false;
 
     if (isTP) {
-      // TP API has no lobby CORS — fire no-cors wakeup and use a timer
+      // TP API has no lobby CORS — fire no-cors wakeup and wait with a timer
       fetch(`${serviceUrl}/health`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
-      const timer = setTimeout(() => setStatus('ready'), TP_WARMUP_MS);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => { if (!cancelled) setStatus('ready'); }, TP_WARMUP_MS);
+      return () => { cancelled = true; clearTimeout(timer); };
     }
 
-    // RGS-backed games — proper health check with CORS
-    fetch(`${serviceUrl}/health`, { signal: controller.signal, cache: 'no-store' })
-      .then(res => { if (!controller.signal.aborted) setStatus(res.ok ? 'ready' : 'timeout'); })
-      .catch(() => { if (!controller.signal.aborted) setStatus('timeout'); });
+    // RGS-backed games — poll with retries so a sleeping service shows
+    // the spinner while waking rather than jumping straight to "timeout"
+    let attempts = 0;
+    let retryTimer: ReturnType<typeof setTimeout>;
 
-    const fallback = setTimeout(() => {
-      controller.abort();
-      setStatus('ready'); // Optimistically let the user try after 60s
-    }, GLOBAL_TIMEOUT_MS);
+    const poll = async () => {
+      if (cancelled) return;
+      try {
+        const res = await fetch(`${serviceUrl}/health`, { cache: 'no-store' });
+        if (!cancelled) setStatus(res.ok ? 'ready' : 'timeout');
+        return;
+      } catch {
+        // Service is still waking — keep retrying
+      }
+      attempts++;
+      if (attempts >= MAX_RETRIES) {
+        if (!cancelled) setStatus('timeout');
+        return;
+      }
+      retryTimer = setTimeout(poll, RETRY_INTERVAL_MS);
+    };
+
+    poll();
 
     return () => {
-      clearTimeout(fallback);
-      controller.abort();
+      cancelled = true;
+      clearTimeout(retryTimer);
     };
   }, [game.id]);
 
@@ -89,11 +103,11 @@ export function GameLoadingModal({ game, onClose }: GameLoadingModalProps) {
             <div className="flex items-center justify-center gap-3 text-muted-foreground">
               <div className="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0" />
               <span className="text-sm tracking-widest uppercase">
-                {isTP ? 'Entering the tomb...' : 'Connecting to server...'}
+                {isTP ? 'Entering the tomb...' : 'Warming up game services...'}
               </span>
             </div>
             <p className="text-xs text-muted-foreground/50 tracking-wide">
-              Game services are warming up — this takes ~30 seconds on first visit
+              This takes ~30 seconds on first visit
             </p>
           </div>
         )}
