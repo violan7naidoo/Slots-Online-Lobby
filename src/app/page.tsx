@@ -6,7 +6,7 @@ import { GameGrid } from '@/components/lobby/game-grid';
 
 export default function LobbyPage() {
   const { games, loading, error } = useGames();
-  const { status, isWaking } = useServiceWakeup();
+  useServiceWakeup(); // Silently warms up all backend services on load
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
@@ -58,23 +58,6 @@ export default function LobbyPage() {
             </div>
           </div>
         </div>
-
-        {/* Service wakeup banner */}
-        {isWaking && (
-          <div className="flex items-center gap-3 bg-card/80 border border-border rounded-lg px-4 py-3 mb-6">
-            <div className="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              Warming up game services — first visit may take ~30 seconds...
-            </p>
-          </div>
-        )}
-        {status === 'timeout' && (
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-3 mb-6">
-            <p className="text-sm text-amber-400">
-              Services are taking longer than expected. You can still launch a game — it may take a moment to respond on the first spin.
-            </p>
-          </div>
-        )}
 
         {/* Error State */}
         {error && (
