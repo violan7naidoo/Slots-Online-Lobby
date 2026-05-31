@@ -35,6 +35,8 @@ export function useGames() {
             frontendUrl = process.env.NEXT_PUBLIC_GAME_3_URL;
           } else if (game.id === 4 && process.env.NEXT_PUBLIC_GAME_4_URL) {
             frontendUrl = process.env.NEXT_PUBLIC_GAME_4_URL;
+          } else if (game.id === 8 && process.env.NEXT_PUBLIC_THUNDER_PHARAOH_URL) {
+            frontendUrl = process.env.NEXT_PUBLIC_THUNDER_PHARAOH_URL;
           }
           
           return {

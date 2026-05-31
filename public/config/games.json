@@ -62,6 +62,15 @@
       "thumbnail": "",
       "description": "Dynamic number of symbols per reel for each spin",
       "enabled": false
+    },
+    {
+      "id": 8,
+      "name": "Thunder Pharaoh",
+      "gameId": "THUNDER_PHARAOH",
+      "frontendUrl": "http://localhost:3005",
+      "thumbnail": "/images/games/thunder-pharaoh.jpg",
+      "description": "5x3 slot with Sand Rush Hold & Spin, Trial of Gods free spins, and Pharaoh's Trial jackpot picks. 30 paylines, 97.5% RTP.",
+      "enabled": true
     }
   ]
 }

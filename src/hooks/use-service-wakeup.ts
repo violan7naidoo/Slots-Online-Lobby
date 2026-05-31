@@ -30,6 +30,7 @@ export function useServiceWakeup() {
     const rgsUrl = process.env.NEXT_PUBLIC_RGS_URL;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const rngUrl = process.env.NEXT_PUBLIC_RNG_URL;
+    const tpApiUrl = process.env.NEXT_PUBLIC_TP_API_URL;
 
     // Skip wakeup in local dev
     if (!rgsUrl || rgsUrl.includes('localhost')) {
@@ -41,8 +42,9 @@ export function useServiceWakeup() {
 
     const controller = new AbortController();
 
-    // Fire RNG wakeup immediately (no-cors — no response needed, just wakes it)
+    // Fire no-cors wakeups immediately for services without browser CORS
     if (rngUrl) fireWakeup(rngUrl);
+    if (tpApiUrl) fireWakeup(tpApiUrl);
 
     // Ping RGS and API with CORS — wait for both to confirm healthy
     const readableUrls = [rgsUrl, apiUrl].filter((u): u is string => Boolean(u));
