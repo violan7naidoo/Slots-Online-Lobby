@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 export type WakeupStatus = 'idle' | 'waking' | 'ready' | 'timeout';
 
+// Ping a service that has CORS enabled — reads the response to confirm it's healthy
 async function pingHealth(url: string, signal: AbortSignal): Promise<boolean> {
   try {
     const res = await fetch(`${url}/health`, { signal, cache: 'no-store' });
@@ -13,12 +14,22 @@ async function pingHealth(url: string, signal: AbortSignal): Promise<boolean> {
   }
 }
 
+// Wake a service that has no browser CORS (server-side only) — fires the request but ignores the response
+async function fireWakeup(url: string): Promise<void> {
+  try {
+    await fetch(`${url}/health`, { mode: 'no-cors', cache: 'no-store' });
+  } catch {
+    // Ignore — the request was still sent, which wakes the service
+  }
+}
+
 export function useServiceWakeup() {
   const [status, setStatus] = useState<WakeupStatus>('idle');
 
   useEffect(() => {
     const rgsUrl = process.env.NEXT_PUBLIC_RGS_URL;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const rngUrl = process.env.NEXT_PUBLIC_RNG_URL;
 
     // Skip wakeup in local dev
     if (!rgsUrl || rgsUrl.includes('localhost')) {
@@ -30,9 +41,13 @@ export function useServiceWakeup() {
 
     const controller = new AbortController();
 
-    const urls = [rgsUrl, apiUrl].filter((u): u is string => Boolean(u));
+    // Fire RNG wakeup immediately (no-cors — no response needed, just wakes it)
+    if (rngUrl) fireWakeup(rngUrl);
 
-    Promise.all(urls.map(url => pingHealth(url, controller.signal))).then(results => {
+    // Ping RGS and API with CORS — wait for both to confirm healthy
+    const readableUrls = [rgsUrl, apiUrl].filter((u): u is string => Boolean(u));
+
+    Promise.all(readableUrls.map(url => pingHealth(url, controller.signal))).then(results => {
       if (!controller.signal.aborted) {
         setStatus(results.every(Boolean) ? 'ready' : 'timeout');
       }
